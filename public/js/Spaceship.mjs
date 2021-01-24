@@ -105,6 +105,13 @@ export const Spaceship = () => {
           emissive-intensity="10"
         ></three-mesh-standard-material>
       </three-mesh>
+      <three-point-light
+        position.z="1"
+        color="cyan"
+        distance="10"
+        decay="1"
+        intensity="2"
+      ></three-point-light>
     </three-group>
   `
 }
