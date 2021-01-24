@@ -66,8 +66,6 @@ class SpaceScene extends ThreeScene {
 
   render() {
     this.composer && this.composer.render()
-    // renderer.clearDepth()
-    // renderer.render(this.object, this.camera)
   }
 }
 
