@@ -53,7 +53,7 @@ class SpaceScene extends ThreeScene {
     /* Add bloom pass */
     const bloom = new UnrealBloomPass(
       new THREE.Vector2(width, height),
-      8,
+      5,
       1,
       0.6
     )
