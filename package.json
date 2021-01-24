@@ -1,0 +1,14 @@
+{
+  "name": "lit-game",
+  "private": "true",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Hendrik Mans <hendrik@mans.de>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "serve public"
+  },
+  "devDependencies": {
+    "serve": "^11.3.2"
+  }
+}
