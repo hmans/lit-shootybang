@@ -1,7 +1,7 @@
 import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import { html } from "https://cdn.skypack.dev/lit-html"
 import * as THREE from "https://cdn.skypack.dev/three"
-import { spawnBullet } from "./bullets.mjs"
+import { spawnBullet } from "./Bullets.mjs"
 import { buttonA, buttonAccelerate, handleInput, stick } from "./input.mjs"
 import { world } from "./physics.mjs"
 import { sounds } from "./sounds.mjs"

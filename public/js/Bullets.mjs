@@ -3,30 +3,38 @@ import { html } from "https://cdn.skypack.dev/lit-html"
 import { store } from "./store.mjs"
 import { world } from "./physics.mjs"
 
-export const spawnBullet = (position, quaternion) => {
-  const bulletBody = new CANNON.Body({
+/* Create 100 bullets */
+for (let i = 0; i < 100; i++) {
+  store.state.bullets[i] = new CANNON.Body({
     mass: 1,
-    position,
-    quaternion,
     shape: new CANNON.Sphere(0.1),
     linearDamping: 0,
     angularDamping: 0,
     collisionFilterGroup: 2,
     collisionFilterMask: 4
   })
+}
+
+let nextBullet = 0
+
+const bulletForce = new CANNON.Vec3(0, 0, -5000)
+export const spawnBullet = (position, quaternion) => {
+  const bulletBody = store.state.bullets[nextBullet]
+
+  bulletBody.position.copy(position)
+  bulletBody.quaternion.copy(quaternion)
+  bulletBody.velocity.setZero()
 
   world.addBody(bulletBody)
 
-  const force = bulletBody.quaternion.vmult(new CANNON.Vec3(0, 0, -5000))
+  const force = bulletBody.quaternion.vmult(bulletForce)
   bulletBody.applyForce(force)
 
-  store.set(({ bullets }) => ({ bullets: [...bullets, bulletBody] }))
   setTimeout(() => {
     world.removeBody(bulletBody)
-    store.set(({ bullets }) => ({
-      bullets: bullets.filter((b) => b !== bulletBody)
-    }))
   }, 1000)
+
+  nextBullet = (nextBullet + 1) % 100
 }
 
 const Bullet = (bulletBody) => {
@@ -56,7 +64,9 @@ const Bullet = (bulletBody) => {
 export const Bullets = () => {
   return html`
     <three-group name="bullets">
-      ${store.state.bullets.map((bullet) => Bullet(bullet))}
+      ${store.state.bullets.map((bullet) =>
+        bullet.world ? Bullet(bullet) : null
+      )}
     </three-group>
   `
 }
