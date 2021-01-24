@@ -1,8 +1,7 @@
 import * as CANNON from "https://cdn.skypack.dev/cannon-es"
-import * as THREE from "https://cdn.skypack.dev/three"
 import "https://cdn.skypack.dev/three-elements"
 import { html, render } from "https://cdn.skypack.dev/lit-html"
-import hotkeys from "https://cdn.skypack.dev/hotkeys-js"
+import { stick, handleInput } from "./input.mjs"
 
 const world = new CANNON.World()
 world.gravity.set(0, 0, 0)
@@ -15,22 +14,30 @@ const shipBody = new CANNON.Body({
 world.addBody(shipBody)
 
 const Spaceship = () => html`
-  <three-group position.x=${shipBody.position.x} position.y=${shipBody.position.y}>
-    <three-gltf-asset url="/models/spaceship/spaceship.gltf" rotation.x=${Math.PI / 2} scale="0.2"></three-gltf-asset>
+  <three-group
+    position.x=${shipBody.position.x}
+    position.y=${shipBody.position.y}
+  >
+    <three-gltf-asset
+      url="/models/spaceship/spaceship.gltf"
+      rotation.x=${Math.PI / 2}
+      scale="0.2"
+    ></three-gltf-asset>
   </three-group>
 `
 
 const Lights = () => html`
   <three-ambient-light intensity="0.2"></three-ambient-light>
-  <three-directional-light intensity="0.8" position="10, 40, 50" cast-shadow></three-directional-light>
+  <three-directional-light
+    intensity="0.8"
+    position="10, 40, 50"
+    cast-shadow
+  ></three-directional-light>
 `
 
 const Game = () => html`
   <three-game>
-    <three-scene>
-      ${Lights()}
-      ${Spaceship()}
-    </three-scene>
+    <three-scene> ${Lights()} ${Spaceship()} </three-scene>
   </three-game>
 `
 
@@ -42,19 +49,10 @@ const rerender = () => {
 
 rerender()
 
-/*
-We need to initialize hotkeys with a fake event handler, otherwise its
-isPressed() function won't work :(
-*/
-hotkeys('*', () => { })
-
 /* Ticker */
 let lastTime = performance.now()
 const fixedTimeStep = 1.0 / 60.0
-const maxSubSteps = 3;
-
-const stick = new THREE.Vector2()
-const { isPressed } = hotkeys
+const maxSubSteps = 3
 
 const tick = () => {
   /* Determine deltatime */
@@ -64,11 +62,7 @@ const tick = () => {
   lastTime = time
 
   /* process input */
-  stick.set(0, 0)
-  if (isPressed("w")) stick.y += 1
-  if (isPressed("s")) stick.y -= 1
-  if (isPressed("a")) stick.x -= 1
-  if (isPressed("d")) stick.x += 1
+  handleInput()
 
   /* Apply ship force */
   shipBody.applyForce(stick.multiplyScalar(10000))
