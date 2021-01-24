@@ -1,3 +1,4 @@
+import * as THREE from "https://cdn.skypack.dev/three"
 import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import "https://cdn.skypack.dev/three-elements"
 import { html, render } from "https://cdn.skypack.dev/lit-html"
@@ -8,23 +9,31 @@ world.gravity.set(0, 0, 0)
 
 const shipBody = new CANNON.Body({
   mass: 1000,
+  position: new CANNON.Vec3(0, 0, 0),
   shape: new CANNON.Sphere(2)
 })
 
 world.addBody(shipBody)
 
-const Spaceship = () => html`
-  <three-group
-    position.x=${shipBody.position.x}
-    position.y=${shipBody.position.y}
-  >
-    <three-gltf-asset
-      url="/models/spaceship/spaceship.gltf"
-      rotation.x=${Math.PI / 2}
-      scale="0.2"
-    ></three-gltf-asset>
-  </three-group>
-`
+const Spaceship = () => {
+  return html`
+    <three-group
+      position.x=${shipBody.position.x}
+      position.y=${shipBody.position.y}
+      position.z=${shipBody.position.z}
+      quaternion.x=${shipBody.quaternion.x}
+      quaternion.y=${shipBody.quaternion.y}
+      quaternion.z=${shipBody.quaternion.z}
+      quaternion.w=${shipBody.quaternion.w}
+    >
+      <three-gltf-asset
+        url="/models/spaceship/spaceship.gltf"
+        rotation.x=${Math.PI / 2}
+        scale="0.2"
+      ></three-gltf-asset>
+    </three-group>
+  `
+}
 
 const Lights = () => html`
   <three-ambient-light intensity="0.2"></three-ambient-light>
@@ -65,7 +74,11 @@ const tick = () => {
   handleInput()
 
   /* Apply ship force */
-  shipBody.applyForce(stick.multiplyScalar(10000))
+  const force = new THREE.Vector3(0, stick.y, 0)
+    .multiplyScalar(10000)
+    .applyQuaternion(shipBody.quaternion)
+  shipBody.applyForce(force)
+  shipBody.torque.set(0, 0, -stick.x * 30000)
 
   /* Run physics */
   world.step(fixedTimeStep, dt, maxSubSteps)
