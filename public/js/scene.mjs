@@ -3,6 +3,10 @@ import {
   CubeTextureLoader,
   LinearEncoding
 } from "https://cdn.skypack.dev/three"
+import { world } from "./physics.mjs"
+
+const fixedTimeStep = 1.0 / 60.0
+const maxSubSteps = 3
 
 class SpaceScene extends ThreeScene {
   readyCallback() {
@@ -22,9 +26,12 @@ class SpaceScene extends ThreeScene {
       "/textures/skybox/back.png"
     ])
     scene.background = texture
+
+    /* Register physics ticking */
+    this.ontick = () => {
+      world.step(fixedTimeStep, this.game.deltaTime, maxSubSteps)
+    }
   }
 }
-
-console.log("hi from space-scene")
 
 customElements.define("space-scene", SpaceScene)

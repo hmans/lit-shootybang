@@ -10,8 +10,10 @@ const Lights = () => html`
   ></three-directional-light>
 `
 
-export const Game = () => html`
-  <three-game>
-    <space-scene id="scene"> ${Lights()} ${Spaceship()} </space-scene>
-  </three-game>
-`
+export const Game = () => {
+  return html`
+    <three-game>
+      <space-scene id="scene"> ${Lights()} ${Spaceship()} </space-scene>
+    </three-game>
+  `
+}
