@@ -1,3 +1,5 @@
+# Notes about three-elements
+
 ### Stuff that's great:
 
 - `emissive-intensity` maps to `emissiveIntensity`, and we can use `rotation.x` attributes, wow!
