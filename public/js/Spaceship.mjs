@@ -2,7 +2,8 @@ import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import { html } from "https://cdn.skypack.dev/lit-html"
 import * as THREE from "https://cdn.skypack.dev/three"
 import { world } from "./physics.mjs"
-import { stick, handleInput } from "./input.mjs"
+import { stick, buttonA, handleInput } from "./input.mjs"
+import { spawnBullet } from "./bullets.mjs"
 
 const shipBody = new CANNON.Body({
   mass: 1000,
@@ -45,10 +46,22 @@ function moveCamera(el) {
   // camera.lookAt(shipBody.position.x, shipBody.position.y, shipBody.position.z)
 }
 
+let lastFireTime = 0
+function fireBullets() {
+  const t = performance.now()
+  if (buttonA && t > lastFireTime + 60) {
+    const offset = shipBody.quaternion.vmult(new CANNON.Vec3(1, 0, 0))
+    spawnBullet(shipBody.position.vadd(offset), shipBody.quaternion)
+    spawnBullet(shipBody.position.vsub(offset), shipBody.quaternion)
+    lastFireTime = t
+  }
+}
+
 function onTick() {
   handleInput()
   moveShip()
   moveCamera(this)
+  fireBullets()
 }
 
 export const Spaceship = () => {

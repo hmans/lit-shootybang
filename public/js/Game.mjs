@@ -1,5 +1,6 @@
 import { html } from "https://cdn.skypack.dev/lit-html"
 import { Spaceship } from "./Spaceship.mjs"
+import { Bullets } from "./Bullets.mjs"
 
 const Lights = () => html`
   <three-ambient-light intensity="0.1"></three-ambient-light>
@@ -13,7 +14,9 @@ const Lights = () => html`
 export const Game = () => {
   return html`
     <three-game>
-      <space-scene id="scene"> ${Lights()} ${Spaceship()} </space-scene>
+      <space-scene id="scene">
+        ${Lights()} ${Spaceship()} ${Bullets()}
+      </space-scene>
     </three-game>
   `
 }

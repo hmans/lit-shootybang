@@ -22,4 +22,4 @@ const handleInput = () => {
   buttonA = isPressed("space")
 }
 
-export { handleInput, stick }
+export { handleInput, stick, buttonA }
