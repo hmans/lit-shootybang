@@ -3,6 +3,7 @@ import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import "https://cdn.skypack.dev/three-elements"
 import { html, render } from "https://cdn.skypack.dev/lit-html"
 import { stick, handleInput } from "./input.mjs"
+import "./scene.mjs"
 
 const world = new CANNON.World()
 world.gravity.set(0, 0, 0)
@@ -38,9 +39,9 @@ const Spaceship = () => {
 }
 
 const Lights = () => html`
-  <three-ambient-light intensity="0.2"></three-ambient-light>
+  <three-ambient-light intensity="0.1"></three-ambient-light>
   <three-directional-light
-    intensity="0.8"
+    intensity="0.9"
     position="10, 40, 50"
     cast-shadow
   ></three-directional-light>
@@ -48,7 +49,10 @@ const Lights = () => html`
 
 const Game = () => html`
   <three-game>
-    <three-scene> ${Lights()} ${Spaceship()} </three-scene>
+    <space-scene>
+      ${Lights()} ${Spaceship()}
+      <three-orbit-controls></three-orbit-controls>
+    </space-scene>
   </three-game>
 `
 
