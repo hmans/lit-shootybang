@@ -14,39 +14,44 @@ const shipBody = new CANNON.Body({
 
 world.addBody(shipBody)
 
+function moveShip() {
+  /* Rotate ship */
+  const torque = new THREE.Vector3(
+    stick.y * -10000,
+    0,
+    stick.x * -30000
+  ).applyQuaternion(shipBody.quaternion)
+  shipBody.torque.copy(torque)
+
+  /* Move ship forward */
+  const force = new THREE.Vector3(0, 0, -8000).applyQuaternion(
+    shipBody.quaternion
+  )
+  shipBody.applyForce(force)
+}
+
+function moveCamera(el) {
+  /* Interpolate camera */
+  const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
+    shipBody.quaternion
+  )
+
+  const target = new THREE.Vector3().copy(shipBody.position).add(offset)
+
+  const camera = el.scene.camera
+  camera.position.lerp(target, 0.02)
+  const tq = new THREE.Quaternion().copy(shipBody.quaternion)
+  camera.quaternion.slerp(tq, 0.02)
+  // camera.lookAt(shipBody.position.x, shipBody.position.y, shipBody.position.z)
+}
+
+function onTick() {
+  handleInput()
+  moveShip()
+  moveCamera(this)
+}
+
 export const Spaceship = () => {
-  function onTick() {
-    /* process input */
-    handleInput()
-
-    /* Rotate ship */
-    const torque = new THREE.Vector3(
-      stick.y * -10000,
-      0,
-      stick.x * -30000
-    ).applyQuaternion(shipBody.quaternion)
-    shipBody.torque.copy(torque)
-
-    /* Move ship forward */
-    const force = new THREE.Vector3(0, 0, -8000).applyQuaternion(
-      shipBody.quaternion
-    )
-    shipBody.applyForce(force)
-
-    /* Interpolate camera */
-    const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
-      shipBody.quaternion
-    )
-
-    const target = new THREE.Vector3().copy(shipBody.position).add(offset)
-
-    const camera = this.scene.camera
-    camera.position.lerp(target, 0.02)
-    const tq = new THREE.Quaternion().copy(shipBody.quaternion)
-    camera.quaternion.slerp(tq, 0.02)
-    // camera.lookAt(shipBody.position)
-  }
-
   /* Render spaceship */
   return html`
     <three-group

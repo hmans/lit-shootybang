@@ -8,6 +8,8 @@ isPressed() function won't work :(
 hotkeys("*", () => {})
 
 const stick = new Vector2()
+let buttonA = false
+
 const { isPressed } = hotkeys
 
 const handleInput = () => {
@@ -16,6 +18,8 @@ const handleInput = () => {
   if (isPressed("s")) stick.y -= 1
   if (isPressed("a")) stick.x -= 1
   if (isPressed("d")) stick.x += 1
+
+  buttonA = isPressed("space")
 }
 
 export { handleInput, stick }
