@@ -6,10 +6,9 @@
   "author": "Hendrik Mans <hendrik@mans.de>",
   "license": "MIT",
   "scripts": {
-    "dev": "serve public"
+    "dev": "live-server public"
   },
   "devDependencies": {
-    "live-server": "^1.2.1",
-    "serve": "^11.3.2"
+    "live-server": "^1.2.1"
   }
 }
