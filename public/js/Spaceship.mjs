@@ -2,6 +2,7 @@ import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import { html } from "https://cdn.skypack.dev/lit-html"
 import * as THREE from "https://cdn.skypack.dev/three"
 import { world } from "./physics.mjs"
+import { stick, handleInput } from "./input.mjs"
 
 const shipBody = new CANNON.Body({
   mass: 1000,
@@ -14,13 +15,32 @@ const shipBody = new CANNON.Body({
 world.addBody(shipBody)
 
 export const Spaceship = () => {
-  /* Interpolate camera */
-  const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
-    shipBody.quaternion
-  )
-  const target = new THREE.Vector3().copy(shipBody.position).add(offset)
-  if (window.scene) {
-    const camera = window.scene.camera
+  function onTick() {
+    /* process input */
+    handleInput()
+
+    /* Rotate ship */
+    const torque = new THREE.Vector3(
+      stick.y * -10000,
+      0,
+      stick.x * -30000
+    ).applyQuaternion(shipBody.quaternion)
+    shipBody.torque.copy(torque)
+
+    /* Move ship forward */
+    const force = new THREE.Vector3(0, 0, -8000).applyQuaternion(
+      shipBody.quaternion
+    )
+    shipBody.applyForce(force)
+
+    /* Interpolate camera */
+    const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
+      shipBody.quaternion
+    )
+
+    const target = new THREE.Vector3().copy(shipBody.position).add(offset)
+
+    const camera = this.scene.camera
     camera.position.lerp(target, 0.02)
     const tq = new THREE.Quaternion().copy(shipBody.quaternion)
     camera.quaternion.slerp(tq, 0.02)
@@ -30,6 +50,8 @@ export const Spaceship = () => {
   /* Render spaceship */
   return html`
     <three-group
+      ticking="true"
+      @tick=${onTick}
       position.x=${shipBody.position.x}
       position.y=${shipBody.position.y}
       position.z=${shipBody.position.z}
