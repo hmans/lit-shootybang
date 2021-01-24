@@ -69,6 +69,16 @@ export const Spaceship = () => {
         url="/models/spaceship/spaceship.gltf"
         scale="0.2"
       ></three-gltf-asset>
+      <three-mesh position.z="0.6">
+        <three-box-buffer-geometry
+          args="[1, 0.2, 0.2]"
+        ></three-box-buffer-geometry>
+        <three-mesh-standard-material
+          color="cyan"
+          emissive="cyan"
+          emissive-intensity="1"
+        ></three-mesh-standard-material>
+      </three-mesh>
     </three-group>
   `
 }
