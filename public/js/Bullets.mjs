@@ -31,7 +31,7 @@ export const spawnBullet = (position, quaternion) => {
 
 const Bullet = (bulletBody) => {
   return html`
-    <three-mesh
+    <three-group
       position.x=${bulletBody.position.x}
       position.y=${bulletBody.position.y}
       position.z=${bulletBody.position.z}
@@ -40,14 +40,16 @@ const Bullet = (bulletBody) => {
       quaternion.z=${bulletBody.quaternion.z}
       quaternion.w=${bulletBody.quaternion.w}
     >
-      <three-box-buffer-geometry
-        args="[0.2, 0.2, 0.8]"
-      ></three-box-buffer-geometry>
-      <three-mesh-standard-material
-        color="yellow"
-        emissive="yellow"
-      ></three-mesh-standard-material>
-    </three-mesh>
+      <three-mesh>
+        <three-box-buffer-geometry
+          args="[0.2, 0.2, 0.8]"
+        ></three-box-buffer-geometry>
+        <three-mesh-standard-material
+          color="yellow"
+          emissive="yellow"
+          emissive-intensity="10"
+        ></three-mesh-standard-material> </three-mesh
+    ></three-group>
   `
 }
 

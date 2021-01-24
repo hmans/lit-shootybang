@@ -1,10 +1,10 @@
 import { ThreeScene } from "https://cdn.skypack.dev/three-elements"
-import {
-  CubeTextureLoader,
-  LinearEncoding
-} from "https://cdn.skypack.dev/three"
+import * as THREE from "https://cdn.skypack.dev/three"
 import { EffectComposer } from "https://cdn.skypack.dev/three/examples/jsm/postprocessing/EffectComposer"
 import { RenderPass } from "https://cdn.skypack.dev/three/examples/jsm/postprocessing/RenderPass"
+import { UnrealBloomPass } from "https://cdn.skypack.dev/three/examples/jsm/postprocessing/UnrealBloomPass"
+import { ShaderPass } from "https://cdn.skypack.dev/three/examples/jsm/postprocessing/ShaderPass"
+import { VignetteShader } from "https://cdn.skypack.dev/three/examples/jsm/shaders/VignetteShader"
 
 import { world } from "./physics.mjs"
 
@@ -16,10 +16,10 @@ class SpaceScene extends ThreeScene {
     super.readyCallback()
 
     const scene = this.object
-    this.game.renderer.outputEncoding = LinearEncoding
+    this.game.renderer.outputEncoding = THREE.LinearEncoding
 
     /* Load skybox */
-    const loader = new CubeTextureLoader()
+    const loader = new THREE.CubeTextureLoader()
     const texture = loader.load([
       "/textures/skybox/right.png",
       "/textures/skybox/left.png",
@@ -39,9 +39,9 @@ class SpaceScene extends ThreeScene {
   }
 
   setupComposer() {
-    const { renderer } = this.game
+    const { game, camera } = this
+    const { renderer, width, height } = game
     const scene = this.object
-    const { camera } = this
 
     this.composer = new EffectComposer(renderer)
 
@@ -49,6 +49,19 @@ class SpaceScene extends ThreeScene {
     const renderPass = new RenderPass(scene, camera)
     renderPass.enabled = true
     this.composer.addPass(renderPass)
+
+    /* Add bloom pass */
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(width, height),
+      8,
+      1,
+      0.6
+    )
+    this.composer.addPass(bloom)
+
+    /* Vignette */
+    const vignette = new ShaderPass(VignetteShader)
+    this.composer.addPass(vignette)
   }
 
   render() {
