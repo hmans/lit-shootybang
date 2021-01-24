@@ -63,7 +63,7 @@ const leftGun = new CANNON.Vec3(1.5, 0, -1)
 const rightGun = new CANNON.Vec3(-1.5, 0, -1)
 function fireBullets() {
   const t = performance.now()
-  if (buttonA && t > lastFireTime + 60) {
+  if (buttonA && t > lastFireTime + 90) {
     const id = sounds.fire.play()
     sounds.fire.rate(0.9 + Math.random() * 0.1 - 0.05, id)
 
