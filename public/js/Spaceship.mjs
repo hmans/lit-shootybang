@@ -74,8 +74,11 @@ function fireBullets() {
 function onTick() {
   handleInput()
   moveShip()
-  moveCamera(this)
   fireBullets()
+}
+
+function onLateTick() {
+  moveCamera(this)
 }
 
 export const Spaceship = () => {
@@ -84,6 +87,7 @@ export const Spaceship = () => {
     <three-group
       ticking="true"
       @tick=${onTick}
+      @latetick=${onLateTick}
       position.x=${shipBody.position.x}
       position.y=${shipBody.position.y}
       position.z=${shipBody.position.z}
