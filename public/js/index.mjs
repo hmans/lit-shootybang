@@ -19,6 +19,20 @@ const shipBody = new CANNON.Body({
 world.addBody(shipBody)
 
 const Spaceship = () => {
+  /* Interpolate camera */
+  const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
+    shipBody.quaternion
+  )
+  const target = new THREE.Vector3().copy(shipBody.position).add(offset)
+  if (window.scene) {
+    const camera = window.scene.camera
+    camera.position.lerp(target, 0.02)
+    const tq = new THREE.Quaternion().copy(shipBody.quaternion)
+    camera.quaternion.slerp(tq, 0.02)
+    // camera.lookAt(shipBody.position)
+  }
+
+  /* Render spaceship */
   return html`
     <three-group
       position.x=${shipBody.position.x}
@@ -31,7 +45,6 @@ const Spaceship = () => {
     >
       <three-gltf-asset
         url="/models/spaceship/spaceship.gltf"
-        rotation.x=${Math.PI / 2}
         scale="0.2"
       ></three-gltf-asset>
     </three-group>
@@ -49,10 +62,7 @@ const Lights = () => html`
 
 const Game = () => html`
   <three-game>
-    <space-scene>
-      ${Lights()} ${Spaceship()}
-      <three-orbit-controls></three-orbit-controls>
-    </space-scene>
+    <space-scene id="scene"> ${Lights()} ${Spaceship()} </space-scene>
   </three-game>
 `
 
@@ -79,12 +89,19 @@ const tick = () => {
   /* process input */
   handleInput()
 
-  /* Apply ship force */
-  const force = new THREE.Vector3(0, stick.y, 0)
-    .multiplyScalar(10000)
-    .applyQuaternion(shipBody.quaternion)
+  /* Rotate ship */
+  const torque = new THREE.Vector3(
+    stick.y * -10000,
+    0,
+    stick.x * -30000
+  ).applyQuaternion(shipBody.quaternion)
+  shipBody.torque.copy(torque)
+
+  /* Move ship forward */
+  const force = new THREE.Vector3(0, 0, -8000).applyQuaternion(
+    shipBody.quaternion
+  )
   shipBody.applyForce(force)
-  shipBody.torque.set(0, 0, -stick.x * 30000)
 
   /* Run physics */
   world.step(fixedTimeStep, dt, maxSubSteps)
