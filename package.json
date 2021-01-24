@@ -9,6 +9,7 @@
     "dev": "serve public"
   },
   "devDependencies": {
+    "live-server": "^1.2.1",
     "serve": "^11.3.2"
   }
 }
