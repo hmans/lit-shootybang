@@ -4,6 +4,7 @@ import * as THREE from "https://cdn.skypack.dev/three"
 import { world } from "./physics.mjs"
 import { stick, buttonA, handleInput } from "./input.mjs"
 import { spawnBullet } from "./bullets.mjs"
+import { sounds } from "./sounds.mjs"
 
 const shipBody = new CANNON.Body({
   mass: 1000,
@@ -59,6 +60,9 @@ let lastFireTime = 0
 function fireBullets() {
   const t = performance.now()
   if (buttonA && t > lastFireTime + 60) {
+    const id = sounds.fire.play()
+    sounds.fire.rate(0.9 + Math.random() * 0.1 - 0.05, id)
+
     let offset = shipBody.quaternion.vmult(new CANNON.Vec3(1, 0, -1))
     spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
     offset = shipBody.quaternion.vmult(new CANNON.Vec3(-1, 0, -1))
