@@ -41,9 +41,9 @@ function moveCamera(el) {
   const target = new THREE.Vector3().copy(shipBody.position).add(offset)
 
   const camera = el.scene.camera
-  camera.position.lerp(target, 0.02)
+  camera.position.lerp(target, 0.08)
   const tq = new THREE.Quaternion().copy(shipBody.quaternion)
-  camera.quaternion.slerp(tq, 0.02)
+  camera.quaternion.slerp(tq, 0.08)
   // camera.lookAt(shipBody.position.x, shipBody.position.y, shipBody.position.z)
 }
 
