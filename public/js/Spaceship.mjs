@@ -46,13 +46,22 @@ function moveCamera(el) {
   // camera.lookAt(shipBody.position.x, shipBody.position.y, shipBody.position.z)
 }
 
+function spread(quaternion, amplitude = 0.01) {
+  const spreadQuat = new CANNON.Quaternion(
+    Math.random() * amplitude * 2 - amplitude,
+    Math.random() * amplitude * 2 - amplitude,
+    Math.random() * amplitude * 2 - amplitude
+  )
+  return quaternion.mult(spreadQuat)
+}
+
 let lastFireTime = 0
 function fireBullets() {
   const t = performance.now()
   if (buttonA && t > lastFireTime + 60) {
     const offset = shipBody.quaternion.vmult(new CANNON.Vec3(1, 0, 0))
-    spawnBullet(shipBody.position.vadd(offset), shipBody.quaternion)
-    spawnBullet(shipBody.position.vsub(offset), shipBody.quaternion)
+    spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
+    spawnBullet(shipBody.position.vsub(offset), spread(shipBody.quaternion))
     lastFireTime = t
   }
 }

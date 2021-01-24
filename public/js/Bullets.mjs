@@ -20,8 +20,13 @@ export const spawnBullet = (position, quaternion) => {
   const force = bulletBody.quaternion.vmult(new CANNON.Vec3(0, 0, -5000))
   bulletBody.applyForce(force)
 
-  store.state.bullets.push(bulletBody)
-  setTimeout(() => store.state.bullets.shift(), 1000)
+  store.set(({ bullets }) => ({ bullets: [...bullets, bulletBody] }))
+  setTimeout(() => {
+    world.removeBody(bulletBody)
+    store.set(({ bullets }) => ({
+      bullets: bullets.filter((b) => b !== bulletBody)
+    }))
+  }, 1000)
 }
 
 const Bullet = (bulletBody) => {
