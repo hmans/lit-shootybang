@@ -37,18 +37,20 @@ function moveShip() {
 const offset = new THREE.Vector3()
 const target = new THREE.Vector3()
 const targetQuaternion = new THREE.Quaternion()
+
 function moveCamera(el) {
   /* Interpolate camera */
   offset.set(0, 3, 10).applyQuaternion(shipBody.quaternion)
   target.copy(shipBody.position).add(offset)
 
   const camera = el.scene.camera
-  camera.position.lerp(target, 0.08)
+  camera.position.lerp(target, 0.05)
   targetQuaternion.copy(shipBody.quaternion)
-  camera.quaternion.slerp(targetQuaternion, 0.08)
+  camera.quaternion.slerp(targetQuaternion, 0.05)
 }
 
 const spreadQuat = new CANNON.Quaternion()
+
 function spread(quaternion, amplitude = 0.01) {
   spreadQuat.setFromEuler(
     Math.random() * amplitude * 2 - amplitude,
