@@ -23,11 +23,17 @@ export const spawnAsteroid = (position, quaternion, scale = 1) => {
 }
 
 /* Spawn a bunch of asteroids */
-for (let i = 0; i < 10; i++) {
-  const position = insideUnitSphere().multiplyScalar(50)
-  const scale = Math.pow(inside(1, 4), 2)
+for (let i = 0; i < 80; i++) {
+  const position = insideUnitSphere().multiplyScalar(500)
+  const rotation = insideUnitSphere()
+  const quaternion = new CANNON.Quaternion().setFromEuler(
+    rotation.x,
+    rotation.y,
+    rotation.z
+  )
+  const scale = Math.pow(inside(1, 5), 2)
 
-  spawnAsteroid(position, new CANNON.Quaternion(), scale)
+  spawnAsteroid(position, quaternion, scale)
 }
 
 const Asteroid = (body) => {
