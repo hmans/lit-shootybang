@@ -9,7 +9,7 @@ import { sounds } from "./sounds.mjs"
 const shipBody = new CANNON.Body({
   mass: 1000,
   position: new CANNON.Vec3(0, 0, 0),
-  shape: new CANNON.Sphere(2),
+  shape: new CANNON.Sphere(3),
   angularDamping: 0.8,
   linearDamping: 0.8
 })
@@ -63,9 +63,9 @@ function fireBullets() {
     const id = sounds.fire.play()
     sounds.fire.rate(0.9 + Math.random() * 0.1 - 0.05, id)
 
-    let offset = shipBody.quaternion.vmult(new CANNON.Vec3(1, 0, -1))
+    let offset = shipBody.quaternion.vmult(new CANNON.Vec3(1.5, 0, -1))
     spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
-    offset = shipBody.quaternion.vmult(new CANNON.Vec3(-1, 0, -1))
+    offset = shipBody.quaternion.vmult(new CANNON.Vec3(-1.5, 0, -1))
     spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
     lastFireTime = t
   }
@@ -98,24 +98,8 @@ export const Spaceship = () => {
     >
       <three-gltf-asset
         url="/models/spaceship/spaceship.gltf"
-        scale="0.2"
+        scale="0.3"
       ></three-gltf-asset>
-      <three-mesh position.z="0.7">
-        <three-box-buffer-geometry
-          args="[1, 0.2, 0.2]"
-        ></three-box-buffer-geometry>
-        <three-mesh-standard-material
-          emissive="cyan"
-          emissive-intensity="10"
-        ></three-mesh-standard-material>
-      </three-mesh>
-      <three-point-light
-        position.z="1"
-        color="cyan"
-        distance="10"
-        decay="1"
-        intensity="2"
-      ></three-point-light>
     </three-group>
   `
 }
