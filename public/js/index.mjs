@@ -10,7 +10,9 @@ world.gravity.set(0, 0, 0)
 const shipBody = new CANNON.Body({
   mass: 1000,
   position: new CANNON.Vec3(0, 0, 0),
-  shape: new CANNON.Sphere(2)
+  shape: new CANNON.Sphere(2),
+  angularDamping: 0.8,
+  linearDamping: 0.8
 })
 
 world.addBody(shipBody)
