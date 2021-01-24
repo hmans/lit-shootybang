@@ -1,9 +1,9 @@
 import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import { html } from "https://cdn.skypack.dev/lit-html"
 import * as THREE from "https://cdn.skypack.dev/three"
-import { world } from "./physics.mjs"
-import { stick, buttonA, buttonAccelerate, handleInput } from "./input.mjs"
 import { spawnBullet } from "./bullets.mjs"
+import { buttonA, buttonAccelerate, handleInput, stick } from "./input.mjs"
+import { world } from "./physics.mjs"
 import { sounds } from "./sounds.mjs"
 
 const shipBody = new CANNON.Body({
@@ -16,41 +16,41 @@ const shipBody = new CANNON.Body({
 
 world.addBody(shipBody)
 
+const tmpVec3 = new THREE.Vector3()
+
 function moveShip() {
   /* Rotate ship */
-  const torque = new THREE.Vector3(
-    stick.y * -10000,
-    0,
-    stick.x * -30000
-  ).applyQuaternion(shipBody.quaternion)
-  shipBody.torque.copy(torque)
-
-  /* Move ship forward */
-  const force = new THREE.Vector3(
-    0,
-    0,
-    buttonAccelerate ? -30000 : -8000
-  ).applyQuaternion(shipBody.quaternion)
-  shipBody.applyForce(force)
-}
-
-function moveCamera(el) {
-  /* Interpolate camera */
-  const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
-    shipBody.quaternion
+  shipBody.torque.copy(
+    tmpVec3
+      .set(stick.y * -10000, 0, stick.x * -30000)
+      .applyQuaternion(shipBody.quaternion)
   )
 
-  const target = new THREE.Vector3().copy(shipBody.position).add(offset)
+  /* Move ship forward */
+  shipBody.applyForce(
+    tmpVec3
+      .set(0, 0, buttonAccelerate ? -30000 : -8000)
+      .applyQuaternion(shipBody.quaternion)
+  )
+}
+
+const offset = new THREE.Vector3()
+const target = new THREE.Vector3()
+const targetQuaternion = new THREE.Quaternion()
+function moveCamera(el) {
+  /* Interpolate camera */
+  offset.set(0, 3, 10).applyQuaternion(shipBody.quaternion)
+  target.copy(shipBody.position).add(offset)
 
   const camera = el.scene.camera
   camera.position.lerp(target, 0.08)
-  const tq = new THREE.Quaternion().copy(shipBody.quaternion)
-  camera.quaternion.slerp(tq, 0.08)
-  // camera.lookAt(shipBody.position.x, shipBody.position.y, shipBody.position.z)
+  targetQuaternion.copy(shipBody.quaternion)
+  camera.quaternion.slerp(targetQuaternion, 0.08)
 }
 
+const spreadQuat = new CANNON.Quaternion()
 function spread(quaternion, amplitude = 0.01) {
-  const spreadQuat = new CANNON.Quaternion(
+  spreadQuat.setFromEuler(
     Math.random() * amplitude * 2 - amplitude,
     Math.random() * amplitude * 2 - amplitude,
     Math.random() * amplitude * 2 - amplitude
@@ -59,15 +59,17 @@ function spread(quaternion, amplitude = 0.01) {
 }
 
 let lastFireTime = 0
+const leftGun = new CANNON.Vec3(1.5, 0, -1)
+const rightGun = new CANNON.Vec3(-1.5, 0, -1)
 function fireBullets() {
   const t = performance.now()
   if (buttonA && t > lastFireTime + 60) {
     const id = sounds.fire.play()
     sounds.fire.rate(0.9 + Math.random() * 0.1 - 0.05, id)
 
-    let offset = shipBody.quaternion.vmult(new CANNON.Vec3(1.5, 0, -1))
+    let offset = shipBody.quaternion.vmult(leftGun)
     spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
-    offset = shipBody.quaternion.vmult(new CANNON.Vec3(-1.5, 0, -1))
+    offset = shipBody.quaternion.vmult(rightGun)
     spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
     lastFireTime = t
   }
