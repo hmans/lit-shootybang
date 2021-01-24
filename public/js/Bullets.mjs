@@ -37,9 +37,10 @@ export const spawnBullet = (position, quaternion) => {
   nextBullet = (nextBullet + 1) % 100
 }
 
-const Bullet = (bulletBody) => {
+const Bullet = (bulletBody, key) => {
   return html`
     <three-group
+      key=${key}
       position.x=${bulletBody.position.x}
       position.y=${bulletBody.position.y}
       position.z=${bulletBody.position.z}
@@ -64,8 +65,8 @@ const Bullet = (bulletBody) => {
 export const Bullets = () => {
   return html`
     <three-group name="bullets">
-      ${store.state.bullets.map((bullet) =>
-        bullet.world ? Bullet(bullet) : null
+      ${store.state.bullets.map((bullet, i) =>
+        bullet.world ? Bullet(bullet, i) : null
       )}
     </three-group>
   `
