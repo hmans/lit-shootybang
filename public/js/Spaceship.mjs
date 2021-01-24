@@ -59,9 +59,10 @@ let lastFireTime = 0
 function fireBullets() {
   const t = performance.now()
   if (buttonA && t > lastFireTime + 60) {
-    const offset = shipBody.quaternion.vmult(new CANNON.Vec3(1, 0, 0))
+    let offset = shipBody.quaternion.vmult(new CANNON.Vec3(1, 0, -1))
     spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
-    spawnBullet(shipBody.position.vsub(offset), spread(shipBody.quaternion))
+    offset = shipBody.quaternion.vmult(new CANNON.Vec3(-1, 0, -1))
+    spawnBullet(shipBody.position.vadd(offset), spread(shipBody.quaternion))
     lastFireTime = t
   }
 }
