@@ -2,7 +2,7 @@ import * as CANNON from "https://cdn.skypack.dev/cannon-es"
 import { html } from "https://cdn.skypack.dev/lit-html"
 import * as THREE from "https://cdn.skypack.dev/three"
 import { world } from "./physics.mjs"
-import { stick, buttonA, handleInput } from "./input.mjs"
+import { stick, buttonA, buttonAccelerate, handleInput } from "./input.mjs"
 import { spawnBullet } from "./bullets.mjs"
 import { sounds } from "./sounds.mjs"
 
@@ -26,9 +26,11 @@ function moveShip() {
   shipBody.torque.copy(torque)
 
   /* Move ship forward */
-  const force = new THREE.Vector3(0, 0, -8000).applyQuaternion(
-    shipBody.quaternion
-  )
+  const force = new THREE.Vector3(
+    0,
+    0,
+    buttonAccelerate ? -30000 : -8000
+  ).applyQuaternion(shipBody.quaternion)
   shipBody.applyForce(force)
 }
 

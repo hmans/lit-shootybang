@@ -9,6 +9,7 @@ hotkeys("*", () => {})
 
 const stick = new Vector2()
 let buttonA = false
+let buttonAccelerate = false
 
 const { isPressed } = hotkeys
 
@@ -20,6 +21,7 @@ const handleInput = () => {
   if (isPressed("d")) stick.x += 1
 
   buttonA = isPressed("space")
+  buttonAccelerate = isPressed("shift")
 }
 
-export { handleInput, stick, buttonA }
+export { handleInput, stick, buttonA, buttonAccelerate }
