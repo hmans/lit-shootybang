@@ -51,7 +51,7 @@ const Bullet = (bulletBody, key) => {
     >
       <three-mesh>
         <three-box-buffer-geometry
-          args="[0.2, 0.2, 0.8]"
+          args="0.2, 0.2, 0.8"
         ></three-box-buffer-geometry>
         <three-mesh-standard-material
           color="yellow"

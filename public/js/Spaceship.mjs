@@ -63,6 +63,7 @@ function spread(quaternion, amplitude = 0.01) {
 let lastFireTime = 0
 const leftGun = new CANNON.Vec3(1.5, 0, -1)
 const rightGun = new CANNON.Vec3(-1.5, 0, -1)
+
 function fireBullets() {
   const t = performance.now()
   if (buttonA && t > lastFireTime + 90) {
@@ -77,23 +78,22 @@ function fireBullets() {
   }
 }
 
-function onTick() {
+function onTick(dt, el) {
   handleInput()
   moveShip()
   fireBullets()
+  moveCamera(el)
 }
 
-function onLateTick() {
-  moveCamera(this)
+const onLateTick = (dt, el) => {
+  moveCamera(el)
 }
 
 export const Spaceship = () => {
   /* Render spaceship */
   return html`
     <three-group
-      ticking="true"
-      @tick=${onTick}
-      @latetick=${onLateTick}
+      .tick=${onTick}
       position.x=${shipBody.position.x}
       position.y=${shipBody.position.y}
       position.z=${shipBody.position.z}

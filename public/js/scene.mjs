@@ -1,4 +1,4 @@
-import { ThreeScene } from "https://cdn.skypack.dev/three-elements"
+import { ThreeScene } from "https://cdn.skypack.dev/three-elements@next"
 import * as THREE from "https://cdn.skypack.dev/three"
 import { EffectComposer } from "https://cdn.skypack.dev/three/examples/jsm/postprocessing/EffectComposer"
 import { RenderPass } from "https://cdn.skypack.dev/three/examples/jsm/postprocessing/RenderPass"
@@ -12,8 +12,8 @@ const fixedTimeStep = 1.0 / 60.0
 const maxSubSteps = 3
 
 class SpaceScene extends ThreeScene {
-  readyCallback() {
-    super.readyCallback()
+  mountedCallback() {
+    super.mountedCallback()
 
     const scene = this.object
     this.game.renderer.outputEncoding = THREE.LinearEncoding
@@ -33,7 +33,7 @@ class SpaceScene extends ThreeScene {
     this.setupComposer()
 
     /* Register physics ticking */
-    this.ontick = () => {
+    this.tick = () => {
       world.step(fixedTimeStep, this.game.deltaTime, maxSubSteps)
     }
   }
