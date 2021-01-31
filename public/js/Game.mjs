@@ -14,7 +14,7 @@ const Lights = () => html`
 
 export const Game = () => {
   return html`
-    <three-game autorender>
+    <three-game autorender id="game">
       <space-scene id="scene">
         ${Lights()} ${Spaceship()} ${Bullets()} ${Asteroids()}
       </space-scene>

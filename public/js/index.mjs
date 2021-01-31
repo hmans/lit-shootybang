@@ -11,6 +11,7 @@ const rerender = () => {
 
 rerender()
 
-document.getElementById("scene").lateTick = () => {
+const game = document.getElementById("game")
+game.emitter.on("render-tick", () => {
   rerender()
-}
+})

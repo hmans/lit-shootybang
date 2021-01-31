@@ -82,7 +82,6 @@ function onTick(dt, el) {
   handleInput()
   moveShip()
   fireBullets()
-  moveCamera(el)
 }
 
 const onLateTick = (dt, el) => {
@@ -94,6 +93,7 @@ export const Spaceship = () => {
   return html`
     <three-group
       .tick=${onTick}
+      .lateTick=${onLateTick}
       position.x=${shipBody.position.x}
       position.y=${shipBody.position.y}
       position.z=${shipBody.position.z}
